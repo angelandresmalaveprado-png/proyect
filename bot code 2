@@ -1,0 +1,74 @@
+import discord
+from discord.ext import commands
+import random
+
+intents = discord.Intents.default()
+intents.message_content = True
+
+# Disable default help command
+bot = commands.Bot(command_prefix='$', intents=intents, help_command=None)
+
+@bot.event
+async def on_ready():
+    print(f'Bot ecológico conectado como {bot.user}')
+
+# Diccionario de residuos
+residuos = {
+    "plastico": "♻️ Reciclable",
+    "papel": "♻️ Reciclable",
+    "carton": "♻️ Reciclable",
+    "vidrio": "♻️ Reciclable",
+    "lata": "♻️ Reciclable",
+    "banana": "🌱 Orgánico",
+    "manzana": "🌱 Orgánico",
+    "restos de comida": "🌱 Orgánico",
+    "pañal": "🗑️ Basura",
+    "colilla": "🗑️ Basura",
+    "papel higienico": "🗑️ Basura"
+}
+
+@bot.command()
+async def residuo(ctx, *, nombre):
+    nombre = nombre.lower()
+    if nombre in residuos:
+        await ctx.send(f"🔍 **{nombre}** → {residuos[nombre]}")
+    else:
+        await ctx.send(
+            f"🤔 No sé qué hacer con **{nombre}**.\n"
+            "Pregunta a un experto o revisa normas locales."
+        )
+
+@bot.command()
+async def recomendacion(ctx):
+    recomendaciones = [
+        "💡 Apaga las luces al salir de una habitación.",
+        "🚿 Reduce el tiempo de tus duchas para ahorrar agua.",
+        "🛍️ Usa bolsas reutilizables en lugar de plástico.",
+        "🚲 Usa bicicleta o camina en trayectos cortos.",
+        "🔌 Desconecta aparatos electrónicos cuando no los uses.",
+        "🥤 Evita productos de un solo uso como botellas plásticas.",
+        "🌳 Planta un árbol o cuida áreas verdes."
+    ]
+
+    consejo = random.choice(recomendaciones)
+    await ctx.send(consejo)
+
+# Comando de ayuda personalizado
+@bot.command()
+async def ayuda(ctx):
+    mensaje = (
+        "🌱 **Bot Ecológico - Ayuda** 🌱\n\n"
+        "Estos son los comandos disponibles:\n\n"
+        "🔍 **$residuo <nombre>**\n"
+        "Ejemplo: `$residuo plastico`\n"
+        "Te dice cómo clasificar un residuo.\n\n"
+        "💡 **$recomendacion**\n"
+        "Te da un consejo ecológico aleatorio.\n\n"
+        "ℹ️ **$ayuda**\n"
+        "Muestra este mensaje de ayuda.\n"
+    )
+
+    await ctx.send(mensaje)
+
+# Recuerda poner tu token aquí
+bot.run("TU_TOKEN_AQUI")
